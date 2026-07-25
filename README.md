@@ -2,7 +2,7 @@
 
 **Verdict: NOT_REPRODUCED**  (6/7 claims reproduced within their pre-registered tolerance)
 
-An independent *reproduction* (ACM "Results Reproduced") — re-running the authors' own artifacts and checking the reported numbers against tolerances registered **before** the run.
+An independent *replication* (ACM "Results Replicated") — the experiment was re-implemented from the paper's text by a different team, without using the authors' code, and the reported numbers were checked against tolerances registered **before** the run. See [REPRODUCTION_NOTES.md](REPRODUCTION_NOTES.md) for the 3-seed results, the one claim that did not replicate, and the scope limits.
 
 ## Paper reproduced
 

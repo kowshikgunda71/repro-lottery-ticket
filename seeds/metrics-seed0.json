@@ -1,0 +1,303 @@
+{
+  "pm_percent_pm100_0": 100.0,
+  "test_acc_pm100_0": 98.24,
+  "early_stop_iter_pm100_0": 7500,
+  "test_acc_delta_pp_pm100_0": 0.0,
+  "early_stop_reduction_pct_pm100_0": 0.0,
+  "pm_percent_pm51_3": 51.281,
+  "test_acc_pm51_3": 98.01,
+  "early_stop_iter_pm51_3": 3700,
+  "test_acc_delta_pp_pm51_3": -0.23,
+  "early_stop_reduction_pct_pm51_3": 50.67,
+  "pm_percent_pm21_1": 21.072,
+  "test_acc_pm21_1": 98.29,
+  "early_stop_iter_pm21_1": 4000,
+  "test_acc_delta_pp_pm21_1": 0.05,
+  "early_stop_reduction_pct_pm21_1": 46.67,
+  "pm_percent_pm13_5": 13.517,
+  "test_acc_pm13_5": 98.19,
+  "early_stop_iter_pm13_5": 3000,
+  "test_acc_delta_pp_pm13_5": -0.05,
+  "early_stop_reduction_pct_pm13_5": 60.0,
+  "pm_percent_pm3_6": 3.583,
+  "test_acc_pm3_6": 98.17,
+  "early_stop_iter_pm3_6": 4000,
+  "test_acc_delta_pp_pm3_6": -0.07,
+  "early_stop_reduction_pct_pm3_6": 46.67,
+  "pm_percent_pm1_9": 1.851,
+  "test_acc_pm1_9": 97.56,
+  "early_stop_iter_pm1_9": 7100,
+  "test_acc_delta_pp_pm1_9": -0.68,
+  "early_stop_reduction_pct_pm1_9": 5.33,
+  "pm_percent_pm1_2": 1.194,
+  "test_acc_pm1_2": 96.97,
+  "early_stop_iter_pm1_2": 11600,
+  "test_acc_delta_pp_pm1_2": -1.27,
+  "early_stop_reduction_pct_pm1_2": -54.67,
+  "test_acc_random_reinit_pm21_1": 97.93,
+  "acc_gap_ticket_minus_random_pp_pm21_1": 0.36,
+  "speedup_ticket_vs_random_pm21_1": 1.675,
+  "test_acc_random_reinit_pm3_6": 97.3,
+  "acc_gap_ticket_minus_random_pp_pm3_6": 0.87,
+  "speedup_ticket_vs_random_pm3_6": 3.9,
+  "max_test_acc_delta_pp_final_iter": 0.23,
+  "min_train_acc_final_all_levels": 99.28,
+  "_levels": [
+    {
+      "round": 0,
+      "pm": 100.0,
+      "ticket": {
+        "early_stop_iter": 7500,
+        "test_acc": 0.9824,
+        "val_loss": 0.06690840423107147,
+        "final_test_acc": 0.9832,
+        "final_train_acc": 0.9995
+      }
+    },
+    {
+      "round": 1,
+      "pm": 80.03756574004508,
+      "ticket": {
+        "early_stop_iter": 4300,
+        "test_acc": 0.9814,
+        "val_loss": 0.07193488627672195,
+        "final_test_acc": 0.9782,
+        "final_train_acc": 0.9964
+      }
+    },
+    {
+      "round": 2,
+      "pm": 64.06386175807664,
+      "ticket": {
+        "early_stop_iter": 3900,
+        "test_acc": 0.9821,
+        "val_loss": 0.06412725150585175,
+        "final_test_acc": 0.9814,
+        "final_train_acc": 0.9993
+      }
+    },
+    {
+      "round": 3,
+      "pm": 51.28136739293764,
+      "ticket": {
+        "early_stop_iter": 3700,
+        "test_acc": 0.9801,
+        "val_loss": 0.0648655891418457,
+        "final_test_acc": 0.9786,
+        "final_train_acc": 0.9976
+      }
+    },
+    {
+      "round": 4,
+      "pm": 41.05259203606311,
+      "ticket": {
+        "early_stop_iter": 2800,
+        "test_acc": 0.9818,
+        "val_loss": 0.06470420211553574,
+        "final_test_acc": 0.9841,
+        "final_train_acc": 1.0
+      }
+    },
+    {
+      "round": 5,
+      "pm": 32.86626596543952,
+      "ticket": {
+        "early_stop_iter": 2900,
+        "test_acc": 0.9817,
+        "val_loss": 0.06400205940008163,
+        "final_test_acc": 0.9844,
+        "final_train_acc": 1.0
+      }
+    },
+    {
+      "round": 6,
+      "pm": 26.315176558978212,
+      "ticket": {
+        "early_stop_iter": 2500,
+        "test_acc": 0.9814,
+        "val_loss": 0.06042354553937912,
+        "final_test_acc": 0.9837,
+        "final_train_acc": 1.0
+      }
+    },
+    {
+      "round": 7,
+      "pm": 21.072126220886553,
+      "ticket": {
+        "early_stop_iter": 4000,
+        "test_acc": 0.9829,
+        "val_loss": 0.06342475861310959,
+        "final_test_acc": 0.9855,
+        "final_train_acc": 1.0
+      },
+      "random": {
+        "early_stop_iter": 6700,
+        "test_acc": 0.9793,
+        "val_loss": 0.07799558341503143,
+        "final_test_acc": 0.981,
+        "final_train_acc": 1.0
+      }
+    },
+    {
+      "round": 8,
+      "pm": 16.875657400450788,
+      "ticket": {
+        "early_stop_iter": 2800,
+        "test_acc": 0.9835,
+        "val_loss": 0.06317180395126343,
+        "final_test_acc": 0.9843,
+        "final_train_acc": 1.0
+      }
+    },
+    {
+      "round": 9,
+      "pm": 13.516528925619834,
+      "ticket": {
+        "early_stop_iter": 3000,
+        "test_acc": 0.9819,
+        "val_loss": 0.060532569885253906,
+        "final_test_acc": 0.9831,
+        "final_train_acc": 1.0
+      }
+    },
+    {
+      "round": 10,
+      "pm": 10.827573253193087,
+      "ticket": {
+        "early_stop_iter": 3900,
+        "test_acc": 0.9832,
+        "val_loss": 0.06246209889650345,
+        "final_test_acc": 0.9827,
+        "final_train_acc": 1.0
+      }
+    },
+    {
+      "round": 11,
+      "pm": 8.675056348610068,
+      "ticket": {
+        "early_stop_iter": 3400,
+        "test_acc": 0.9822,
+        "val_loss": 0.06306938827037811,
+        "final_test_acc": 0.983,
+        "final_train_acc": 1.0
+      }
+    },
+    {
+      "round": 12,
+      "pm": 6.951915852742299,
+      "ticket": {
+        "early_stop_iter": 4600,
+        "test_acc": 0.9832,
+        "val_loss": 0.0626654326915741,
+        "final_test_acc": 0.9825,
+        "final_train_acc": 1.0
+      }
+    },
+    {
+      "round": 13,
+      "pm": 5.572501878287002,
+      "ticket": {
+        "early_stop_iter": 3600,
+        "test_acc": 0.9817,
+        "val_loss": 0.06347852945327759,
+        "final_test_acc": 0.9813,
+        "final_train_acc": 1.0
+      }
+    },
+    {
+      "round": 14,
+      "pm": 4.467693463561232,
+      "ticket": {
+        "early_stop_iter": 4700,
+        "test_acc": 0.9824,
+        "val_loss": 0.06656698882579803,
+        "final_test_acc": 0.9812,
+        "final_train_acc": 1.0
+      }
+    },
+    {
+      "round": 15,
+      "pm": 3.5826446280991737,
+      "ticket": {
+        "early_stop_iter": 4000,
+        "test_acc": 0.9817,
+        "val_loss": 0.07062903046607971,
+        "final_test_acc": 0.9812,
+        "final_train_acc": 1.0
+      },
+      "random": {
+        "early_stop_iter": 15600,
+        "test_acc": 0.973,
+        "val_loss": 0.10609538853168488,
+        "final_test_acc": 0.9706,
+        "final_train_acc": 0.9983
+      }
+    },
+    {
+      "round": 16,
+      "pm": 2.873779113448535,
+      "ticket": {
+        "early_stop_iter": 4400,
+        "test_acc": 0.9798,
+        "val_loss": 0.07309975475072861,
+        "final_test_acc": 0.9786,
+        "final_train_acc": 1.0
+      }
+    },
+    {
+      "round": 17,
+      "pm": 2.3061607813673928,
+      "ticket": {
+        "early_stop_iter": 7400,
+        "test_acc": 0.979,
+        "val_loss": 0.08140449225902557,
+        "final_test_acc": 0.9789,
+        "final_train_acc": 1.0
+      }
+    },
+    {
+      "round": 18,
+      "pm": 1.8512396694214877,
+      "ticket": {
+        "early_stop_iter": 7100,
+        "test_acc": 0.9756,
+        "val_loss": 0.08908454328775406,
+        "final_test_acc": 0.9763,
+        "final_train_acc": 1.0
+      }
+    },
+    {
+      "round": 19,
+      "pm": 1.4868519909842224,
+      "ticket": {
+        "early_stop_iter": 9000,
+        "test_acc": 0.9737,
+        "val_loss": 0.0913027822971344,
+        "final_test_acc": 0.9717,
+        "final_train_acc": 0.9989
+      }
+    },
+    {
+      "round": 20,
+      "pm": 1.1942148760330578,
+      "ticket": {
+        "early_stop_iter": 11600,
+        "test_acc": 0.9697,
+        "val_loss": 0.10720373690128326,
+        "final_test_acc": 0.9702,
+        "final_train_acc": 0.9928
+      }
+    }
+  ],
+  "_config": {
+    "seed": 0,
+    "iters": 50000,
+    "max_round": 20,
+    "batch": 60,
+    "lr": 0.0012,
+    "optimizer": "adam",
+    "init": "gaussian_glorot",
+    "val_split_seed": 12345,
+    "wall_seconds": 13383.5
+  }
+}
