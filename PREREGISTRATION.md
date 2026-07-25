@@ -42,6 +42,14 @@ are 110–578 CPU-hours each, so they cannot run there). Results return via
 `gym import-run`, which records the boundary honestly as `external:Kaggle`,
 never claiming containment it did not provide.
 
+A calibration kernel (`imp_conv.py --benchmark`) times the actual accelerator and
+projects each sweep *before* any quota is committed, because the weekly budget is
+30 GPU-hours and a session is capped at 12 h — an over-long run yields nothing at
+all rather than partial results. It scores no claims. Every kernel also asserts
+`torch.cuda.is_available()` on its first line: a kernel that requests a GPU can
+still be scheduled on the CPU-only image, and CPU timings would silently
+mis-size the whole allocation.
+
 ## Predictions
 
 16 claims are registered in [`claims.json`](claims.json), each with the paper's

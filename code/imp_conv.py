@@ -228,6 +228,8 @@ def main() -> int:
     ap.add_argument("--max-round", type=int, default=20)
     ap.add_argument("--iters", type=int, default=0, help="override (smoke tests only)")
     ap.add_argument("--reinit-at", type=int, nargs="*", default=None)
+    ap.add_argument("--benchmark", type=int, default=0,
+                    help="time this many iterations, project the sweep, and exit")
     args = ap.parse_args()
 
     spec, iters, lr, conv_rate = ARCHS[args.arch]
@@ -249,6 +251,23 @@ def main() -> int:
     masks = [torch.ones_like(m.weight) for _, m, _ in prunable(model)]
     lv: dict = {}
     out = Path(args.out)
+
+    if args.benchmark:
+        # Calibration only: cost per iteration is ~constant across rounds (pruning
+        # zeroes weights but keeps tensors dense), so one timed segment projects the
+        # whole ladder. Runs before any quota is committed to a real sweep.
+        full_iters = ARCHS[args.arch][1]
+        runs = (args.max_round + 1) + len(reinit_at)
+        train(model, init_state, masks, data, lr=lr, iters=200, dev=dev, seed=0)  # warm up
+        t1 = time.time()
+        train(model, init_state, masks, data, lr=lr, iters=args.benchmark, dev=dev, seed=0)
+        ms = 1000 * (time.time() - t1) / args.benchmark
+        hours = runs * full_iters * ms / 3.6e6
+        print(json.dumps({"arch": args.arch, "device": str(dev), "ms_per_iter": round(ms, 3),
+                          "runs_per_seed": runs, "iters_per_run": full_iters,
+                          "hours_per_seed": round(hours, 2),
+                          "hours_3_seeds": round(3 * hours, 2)}), flush=True)
+        return 0
 
     def flush():
         m: dict = {"_arch": args.arch, "_params": n_params, "_conv_params": n_conv,
