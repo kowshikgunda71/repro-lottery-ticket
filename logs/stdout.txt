@@ -1,0 +1,68 @@
+[    640s] round  0 Pm=100.00%  early_stop@  7500  test=98.24%  final=98.32%
+[   1204s] round  1 Pm= 80.04%  early_stop@  4300  test=98.14%  final=97.82%
+[   1774s] round  2 Pm= 64.06%  early_stop@  3900  test=98.21%  final=98.14%
+[   2402s] round  3 Pm= 51.28%  early_stop@  3700  test=98.01%  final=97.86%
+[   3020s] round  4 Pm= 41.05%  early_stop@  2800  test=98.18%  final=98.41%
+[   3635s] round  5 Pm= 32.87%  early_stop@  2900  test=98.17%  final=98.44%
+[   4229s] round  6 Pm= 26.32%  early_stop@  2500  test=98.14%  final=98.37%
+[   4826s] round  7 Pm= 21.07%  early_stop@  4000  test=98.29%  final=98.55%
+[   5410s] round  7 Pm= 21.07%  RANDOM-REINIT early_stop@  6700  test=97.93%
+[   6008s] round  8 Pm= 16.88%  early_stop@  2800  test=98.35%  final=98.43%
+[   6613s] round  9 Pm= 13.52%  early_stop@  3000  test=98.19%  final=98.31%
+[   7187s] round 10 Pm= 10.83%  early_stop@  3900  test=98.32%  final=98.27%
+[   7750s] round 11 Pm=  8.68%  early_stop@  3400  test=98.22%  final=98.30%
+[   8340s] round 12 Pm=  6.95%  early_stop@  4600  test=98.32%  final=98.25%
+[   8907s] round 13 Pm=  5.57%  early_stop@  3600  test=98.17%  final=98.13%
+[   9509s] round 14 Pm=  4.47%  early_stop@  4700  test=98.24%  final=98.12%
+[  10032s] round 15 Pm=  3.58%  early_stop@  4000  test=98.17%  final=98.12%
+[  10669s] round 15 Pm=  3.58%  RANDOM-REINIT early_stop@ 15600  test=97.30%
+[  11210s] round 16 Pm=  2.87%  early_stop@  4400  test=97.98%  final=97.86%
+[  11817s] round 17 Pm=  2.31%  early_stop@  7400  test=97.90%  final=97.89%
+[  12334s] round 18 Pm=  1.85%  early_stop@  7100  test=97.56%  final=97.63%
+[  12897s] round 19 Pm=  1.49%  early_stop@  9000  test=97.37%  final=97.17%
+[  13383s] round 20 Pm=  1.19%  early_stop@ 11600  test=96.97%  final=97.02%
+{
+  "pm_percent_pm100_0": 100.0,
+  "test_acc_pm100_0": 98.24,
+  "early_stop_iter_pm100_0": 7500,
+  "test_acc_delta_pp_pm100_0": 0.0,
+  "early_stop_reduction_pct_pm100_0": 0.0,
+  "pm_percent_pm51_3": 51.281,
+  "test_acc_pm51_3": 98.01,
+  "early_stop_iter_pm51_3": 3700,
+  "test_acc_delta_pp_pm51_3": -0.23,
+  "early_stop_reduction_pct_pm51_3": 50.67,
+  "pm_percent_pm21_1": 21.072,
+  "test_acc_pm21_1": 98.29,
+  "early_stop_iter_pm21_1": 4000,
+  "test_acc_delta_pp_pm21_1": 0.05,
+  "early_stop_reduction_pct_pm21_1": 46.67,
+  "pm_percent_pm13_5": 13.517,
+  "test_acc_pm13_5": 98.19,
+  "early_stop_iter_pm13_5": 3000,
+  "test_acc_delta_pp_pm13_5": -0.05,
+  "early_stop_reduction_pct_pm13_5": 60.0,
+  "pm_percent_pm3_6": 3.583,
+  "test_acc_pm3_6": 98.17,
+  "early_stop_iter_pm3_6": 4000,
+  "test_acc_delta_pp_pm3_6": -0.07,
+  "early_stop_reduction_pct_pm3_6": 46.67,
+  "pm_percent_pm1_9": 1.851,
+  "test_acc_pm1_9": 97.56,
+  "early_stop_iter_pm1_9": 7100,
+  "test_acc_delta_pp_pm1_9": -0.68,
+  "early_stop_reduction_pct_pm1_9": 5.33,
+  "pm_percent_pm1_2": 1.194,
+  "test_acc_pm1_2": 96.97,
+  "early_stop_iter_pm1_2": 11600,
+  "test_acc_delta_pp_pm1_2": -1.27,
+  "early_stop_reduction_pct_pm1_2": -54.67,
+  "test_acc_random_reinit_pm21_1": 97.93,
+  "acc_gap_ticket_minus_random_pp_pm21_1": 0.36,
+  "speedup_ticket_vs_random_pm21_1": 1.675,
+  "test_acc_random_reinit_pm3_6": 97.3,
+  "acc_gap_ticket_minus_random_pp_pm3_6": 0.87,
+  "speedup_ticket_vs_random_pm3_6": 3.9,
+  "max_test_acc_delta_pp_final_iter": 0.23,
+  "min_train_acc_final_all_levels": 99.28
+}

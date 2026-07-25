@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "This is an independent reproduction. Please cite BOTH this reproduction and the original paper listed under references."
+title: "Reproduction of: The Lottery Ticket Hypothesis: Finding Sparse, Trainable Neural Networks"
+type: dataset
+abstract: "Independent reproduction (verdict: NOT_REPRODUCED) of the paper below, produced with paper-repro-gym. Evidence only; the original artifacts are not redistributed."
+authors:
+  - name: "kowshikgunda71"
+license: MIT
+references:
+  - type: article
+    title: "The Lottery Ticket Hypothesis: Finding Sparse, Trainable Neural Networks"
+    authors:
+      - name: "Frankle, Jonathan"
+      - name: "Carbin, Michael"
+    year: 2019
+    journal: "ICLR 2019"
+    doi: "10.48550/arXiv.1803.03635"
+    url: "https://arxiv.org/abs/1803.03635"

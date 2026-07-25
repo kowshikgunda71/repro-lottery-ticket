@@ -1,0 +1,79 @@
+[
+  {
+    "id": "C1",
+    "description": "Winning tickets learn faster: at Pm=21.1% the early-stopping iteration (minimum validation loss) occurs 38% earlier than for the unpruned network.",
+    "section": "Section 2, 'Iterative pruning' (Figure 4a, left)",
+    "quote": "The winning tickets learn faster as P_m decreases from 100% to 21%, at which point early-stopping occurs 38% earlier than for the original network.",
+    "metric": "early_stop_reduction_pct_pm21_1",
+    "claimed_value": 38.0,
+    "tolerance": 15.0,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "The paper averages 5 trials; this is 1 seed. Early stopping is the argmin of a validation loss sampled every 100 iterations, which is a noisy statistic. +/-15pp accepts a 23-53% speedup: wide enough for single-seed noise, still failing if pruning does not speed learning up or slows it down."
+  },
+  {
+    "id": "C2",
+    "description": "Test accuracy at early stop improves by more than 0.3 percentage points at Pm=13.5% relative to the unpruned network.",
+    "section": "Section 2, 'Iterative pruning' (Figure 4a, middle)",
+    "quote": "Test accuracy increases with pruning, improving by more than 0.3 percentage points when P_m = 13.5%; after this point, accuracy decreases, returning to the level of the original network when P_m = 3.6%.",
+    "metric": "test_acc_delta_pp_pm13_5",
+    "claimed_value": 0.3,
+    "tolerance": 0.3,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "The paper states a lower bound ('more than 0.3 pp') averaged over 5 trials; the gym scores two-sided, so the stated magnitude is registered as a point value with +/-0.3pp (accepts 0.0-0.6pp). Fails if pruning to 13.5% does not improve accuracy at all."
+  },
+  {
+    "id": "C3",
+    "description": "By Pm=3.6% the accuracy gain is gone: test accuracy returns to the level of the original unpruned network.",
+    "section": "Section 2, 'Iterative pruning' (Figure 4a, middle)",
+    "quote": "after this point, accuracy decreases, returning to the level of the original network when P_m = 3.6%.",
+    "metric": "test_acc_delta_pp_pm3_6",
+    "claimed_value": 0.0,
+    "tolerance": 0.3,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "'Returning to the level of the original network' means a delta of zero; +/-0.3pp is the same band used for C2 so the two halves of the same sentence are held to the same standard."
+  },
+  {
+    "id": "C4",
+    "description": "The original initialisation matters: at Pm=21% the winning ticket reaches minimum validation loss 2.51x faster than the same mask with a resampled initialisation.",
+    "section": "Section 2, 'Random reinitialization' (Figure 4a, orange)",
+    "quote": "When P_m = 21%, the winning ticket reaches minimum validation loss 2.51x faster than when reinitialized and is half a percentage point more accurate.",
+    "metric": "speedup_ticket_vs_random_pm21_1",
+    "claimed_value": 2.51,
+    "tolerance": 0.9,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "A ratio of two noisy argmins, here from 1 seed and 1 reinitialisation draw against the paper's 5 trials x 3 reinit draws. +/-0.9 accepts 1.61x-3.41x, which still fails if the ticket is not meaningfully faster than a random reinit (the paper's central control)."
+  },
+  {
+    "id": "C5",
+    "description": "At Pm=21% the winning ticket is about half a percentage point more accurate than the same mask randomly reinitialised.",
+    "section": "Section 2, 'Random reinitialization' (Figure 4a, middle)",
+    "quote": "When P_m = 21%, the winning ticket reaches minimum validation loss 2.51x faster than when reinitialized and is half a percentage point more accurate.",
+    "metric": "acc_gap_ticket_minus_random_pp_pm21_1",
+    "claimed_value": 0.5,
+    "tolerance": 0.4,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "Accepts a 0.1-0.9pp advantage for the winning ticket on a single reinit draw; fails if the resampled initialisation matches or beats the ticket."
+  },
+  {
+    "id": "C6",
+    "description": "Winning tickets generalise better, not just optimise faster: at iteration 50,000 they still improve test accuracy by up to 0.35 percentage points over the unpruned network.",
+    "section": "Section 2, 'Iterative pruning' (Figure 4b)",
+    "quote": "However, at iteration 50,000 (Figure 4b), iteratively-pruned winning tickets still see a test accuracy improvement of up to 0.35 percentage points in spite of the fact that training accuracy reaches 100% for nearly all networks.",
+    "metric": "max_test_acc_delta_pp_final_iter",
+    "claimed_value": 0.35,
+    "tolerance": 0.3,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "'Up to' means the maximum over pruning levels, so this statistic is upward-biased on any single run; +/-0.3pp accepts 0.05-0.65pp and fails if no pruning level beats the unpruned network at the final iteration."
+  },
+  {
+    "id": "C7",
+    "description": "Structural check of the pruning schedule: pruning 20% of surviving weights per round in each fully-connected layer and 10% in the output layer, layer-wise, leaves Pm=21.1% of the 266,200 weights after 7 rounds.",
+    "section": "Section 2 (Pm labels) + Appendix G.1 / Figure 2 ('All Weights 266K')",
+    "quote": "we perform the lottery ticket experiment iteratively with a pruning rate of 20% per iteration (10% for the output layer) ... Each layer of the network is pruned independently.",
+    "metric": "pm_percent_pm21_1",
+    "claimed_value": 21.1,
+    "tolerance": 0.05,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "Deterministic arithmetic, not a measurement: it verifies the harness implements the paper's pruning schedule and that biases are excluded (266,200 weights). A tight 0.05pp tolerance is therefore appropriate; a mismatch means the implementation is wrong and the other six claims are untrustworthy."
+  }
+]

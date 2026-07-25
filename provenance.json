@@ -1,0 +1,34 @@
+{
+  "schema": "https://slsa.dev/provenance/v1 (subset)",
+  "build_level_claimed": "L1 (self-attested, unhosted) \u2014 not L2/L3",
+  "subject": [
+    {
+      "name": "reproduction-run",
+      "digest": {
+        "sha256": "999c9ca4eb33af00d73c2cdb71a3987b843d200931ce8dacb805393cb7f95f8c"
+      }
+    }
+  ],
+  "predicate": {
+    "buildType": "paper-repro-gym/container-run",
+    "invocation": {
+      "image": "localhost/repro-base:py312",
+      "command": [
+        "python",
+        "/inputs/imp.py",
+        "--data",
+        "/inputs/mnist",
+        "--out",
+        "/output/metrics.json",
+        "--seed",
+        "0",
+        "--iters",
+        "50000",
+        "--max-round",
+        "20"
+      ]
+    },
+    "policy_hash": "c32ebb9dcd7dcc21a399cbc6cfe45458e1a14c065b6cc0262701e9e679c922df",
+    "startedOn": "2026-07-25T04:56:55.384677+00:00"
+  }
+}
