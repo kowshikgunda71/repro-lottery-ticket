@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this replication, cite the original paper first."
+title: "Replication: The Lottery Ticket Hypothesis on CIFAR-10 (Conv-2/4/6)"
+authors:
+  - name: "kowshikgunda71"
+type: software
+references:
+  - type: article
+    title: "The Lottery Ticket Hypothesis: Finding Sparse, Trainable Neural Networks"
+    authors:
+      - family-names: Frankle
+        given-names: Jonathan
+      - family-names: Carbin
+        given-names: Michael
+    year: 2019
+    doi: 10.48550/arXiv.1803.03635
+  - type: report
+    title: "Learning Multiple Layers of Features from Tiny Images"
+    authors:
+      - family-names: Krizhevsky
+        given-names: Alex
+    year: 2009

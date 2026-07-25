@@ -1,0 +1,178 @@
+[
+  {
+    "id": "S1",
+    "description": "Structural: Conv-2 as described in Appendix H.1 and Figure 2 has 4.3M weights (biases excluded). Verifies the reproduction built the architecture the paper describes before any claim about it is scored.",
+    "section": "Figure 2, 'All/Conv Weights' row, Conv-2 column",
+    "quote": "All/Conv Weights 266K | 4.3M / 38K | 2.4M / 260K | 1.7M / 1.1M | 274K / 270K | 20.0M",
+    "metric": "conv2_total_weights",
+    "claimed_value": 4300000,
+    "tolerance": 50000,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "Figure 2 states the count to two significant figures, so +/-50,000 is the half-width of the rounding band on '4.3M'. Deterministic arithmetic, not a measurement: computed pre-run as 3*3*3*64 + 3*3*64*64 + 16384*256 + 256*256 + 256*10 = 4,300,992. Failing this means padding, pooling, or the flatten size is wrong and every empirical claim below is untrustworthy."
+  },
+  {
+    "id": "S2",
+    "description": "Structural: Conv-4 has 2.4M weights (biases excluded). Second, independent confirmation of the same 'same'-padding + pool-after-every-module geometry used for Conv-2.",
+    "section": "Figure 2, 'All/Conv Weights' row, Conv-4 column",
+    "quote": "All/Conv Weights 266K | 4.3M / 38K | 2.4M / 260K | 1.7M / 1.1M | 274K / 270K | 20.0M",
+    "metric": "conv4_total_weights",
+    "claimed_value": 2400000,
+    "tolerance": 50000,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "Same two-significant-figure rounding band as S1. Computed pre-run as 259,776 conv + 8192*256 + 256*256 + 256*10 = 2,425,024. This is the claim that discriminates the geometry: 'valid' padding gives 1,147,072 and dropping the final pool gives 8,716,480, both far outside the band."
+  },
+  {
+    "id": "S3",
+    "description": "Structural: Conv-6's convolutional weight count is 1.1M. Paired with S4 to localise the paper's Conv-6 inconsistency to the fully-connected/total accounting rather than to the convolutional stack.",
+    "section": "Figure 2, 'All/Conv Weights' row, Conv-6 column",
+    "quote": "All/Conv Weights 266K | 4.3M / 38K | 2.4M / 260K | 1.7M / 1.1M | 274K / 270K | 20.0M",
+    "metric": "conv6_conv_weights",
+    "claimed_value": 1100000,
+    "tolerance": 50000,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "Same rounding band as S1/S2. Computed pre-run as 1,728+36,864+73,728+147,456+294,912+589,824 = 1,144,512, which is inside the band. Expected to PASS, and its passing is what makes the S4 failure diagnostic rather than a sign of a broken implementation."
+  },
+  {
+    "id": "S4",
+    "description": "Structural: Conv-6's stated total weight count is 1.7M. REGISTERED AS AN EXPECTED FAILURE. The architecture Appendix H.1 and Figure 2 describe cannot have 1.7M weights; the reproduction will build 2,261,184 and report the discrepancy as a defect in the paper.",
+    "section": "Figure 2, 'All/Conv Weights' row, Conv-6 column; propagated into Section 3 and Appendix H.6",
+    "quote": "All/Conv Weights ... 1.7M / 1.1M ... and Appendix H.6: 'fully-connected layers comprise 99%, 89%, and 35% of the parameters in Conv-2, Conv-4, and Conv-6'",
+    "metric": "conv6_total_weights",
+    "claimed_value": 1700000,
+    "tolerance": 50000,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "Held to exactly the same two-significant-figure band as S1-S3; no special pleading. Pre-run arithmetic already shows this FAILS: the described architecture computes to 2,261,184, missing by 561,184 (11x the tolerance). Reaching 1.7M would require an fc1 input of 1,903.9 units, which is not an integer and corresponds to no spatial map over 256 channels (4x4x256=4,096 gives 2.26M; 3x3x256=2,304 gives 1.80M; 2x2x256=1,024 gives 1.47M). Any change that reaches 1.7M breaks S1 and S2, which match exactly. The failure is declared in advance so the published verdict reports a paper erratum, not a harness bug."
+  },
+  {
+    "id": "S5",
+    "description": "Structural: the pruning schedule (conv 10%, fc 20%, output 10% per round, layer-wise, applied to surviving weights) places Conv-2's 11th pruning round at Pm=8.8%, the sparsity the paper attaches to its Conv-2 speedup claim.",
+    "section": "Figure 2 'Pruning Rate' row + Appendix H.1 (output layer at half the fc rate) + Section 3 Pm labels",
+    "quote": "Pruning Rate fc20% | conv10% fc20% | conv10% fc20% | conv15% fc20% ... and 'The output layer is pruned at half of the rate of the fully-connected layers for the reasons described in Appendix G.'",
+    "metric": "conv2_pm_percent_round11",
+    "claimed_value": 8.8,
+    "tolerance": 0.1,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "Deterministic arithmetic; computed pre-run as 8.808%. The 0.1pp band absorbs integer per-layer survivor counts (floor/round shifts Pm by <0.01pp at these layer sizes) while still catching the realistic implementation bugs: using conv15% instead of conv10% moves this rung by ~1.5pp, and pruning the output layer at the full fc rate or pruning globally moves it further. The same method reproduces the paper's own Lenet rungs exactly (rounds 3/7/9/12/15/18 -> 51.28/21.07/13.52/6.95/3.58/1.85 vs the paper's 51.3/21.1/13.5/7.0/3.6/1.9), which is what validates the 0.1pp band."
+  },
+  {
+    "id": "S6",
+    "description": "Structural: the same schedule places Conv-4's 12th pruning round at Pm=9.2%, the sparsity the paper attaches to its Conv-4 speedup claim. Conv-4's other quoted rung, Pm=11.1%, is round 11.",
+    "section": "Figure 2 'Pruning Rate' row + Appendix H.4 + Section 3 Pm labels",
+    "quote": "we select an iterative convolutional pruning rate of 10% for Conv-2, 10% for Conv-4, and 15% for Conv-6.",
+    "metric": "conv4_pm_percent_round12",
+    "claimed_value": 9.2,
+    "tolerance": 0.1,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "Same band and same justification as S5; computed pre-run as 9.184%. Independently corroborated three ways from the paper's own text: round 11 gives 11.055% (the paper's Pm=11.1% accuracy rung) and round 15 gives 5.365% (the Pm=5.4% rung quoted in Appendix H.2). Under conv15% neither lands, which is the arithmetic that refutes the conv15% rate mistakenly attributed to Conv-4."
+  },
+  {
+    "id": "S7",
+    "description": "Structural: the same schedule at Conv-6's conv15%/fc20%/out10% rates places its 10th pruning round at Pm=15.1%, the sparsity the paper attaches to its Conv-6 speedup claim. REGISTERED AS AN EXPECTED FAILURE, at the same tolerance as S5 and S6.",
+    "section": "Figure 2 'Pruning Rate' row + Appendix H.4 + Section 3 Pm labels",
+    "quote": "2.5x for Conv-6 (P_m=15.1%) ... we select an iterative convolutional pruning rate of ... 15% for Conv-6.",
+    "metric": "conv6_pm_percent_round10",
+    "claimed_value": 15.1,
+    "tolerance": 0.1,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "Deliberately held to the same 0.1pp band as S5/S6 rather than being widened to fit. Pre-run arithmetic gives 15.295% on the architecturally-forced 2,261,184-weight network, missing by 0.195pp. The offset is systematic, not random: Conv-6's other quoted rung, Pm=26.4%, also lands 0.21pp high (26.613% at round 7), and both miss in the same direction. Solving for the total that makes both rungs land exactly gives 2.35M, not the stated 1.7M (which would put these rungs 1.9-2.0pp off). So the paper's own sparsity labels independently corroborate a Conv-6 total near 2.3M and refute 1.7M. Declared in advance as a paper-side inconsistency; Conv-6 rungs are therefore addressed by ROUND INDEX (7 and 10), never by matching the printed Pm."
+  },
+  {
+    "id": "C1",
+    "description": "Winning tickets learn faster on Conv-2: the best winning ticket reaches minimum validation loss 3.5x faster than the unpruned network. Measured as max over swept rounds of [early-stopping iteration of round 0] / [early-stopping iteration of round k], on seed-averaged curves. The paper attaches this maximum to Pm=8.8% (round 11); the observed argmax round is reported alongside.",
+    "section": "Section 3, 'Finding winning tickets' paragraph (Figure 5, top, solid lines, no dropout)",
+    "quote": "Winning tickets reach minimum validation loss at best 3.5x faster for Conv-2 (P_m=8.8%), 3.5x for Conv-4 (P_m=9.2%), and 2.5x for Conv-6 (P_m=15.1%).",
+    "metric": "conv2_max_early_stop_speedup",
+    "claimed_value": 3.5,
+    "tolerance": 1.3,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "The paper reports this exact quantity twice, at the same Pm=8.8% rung, and disagrees with itself: 3.5x in Section 3 (5 trials, Figure 5) and 4.8x in Appendix H.2 (3 trials, learning-rate sweep, same selected lr 2e-4). The paper's own test-retest spread on this metric is therefore 1.3x, and no tolerance narrower than that can be justified. +/-1.3 accepts 2.2x-4.8x, spanning both of the paper's own values, and still fails a null result (1.0x, no speedup) by a wide margin. The underlying statistic is an argmin of validation loss sampled every 100 iterations and is intrinsically noisy; this reproduction averages 3 seeds against the paper's 5."
+  },
+  {
+    "id": "C2",
+    "description": "Winning tickets generalise better on Conv-2: test accuracy at the early-stopping iteration improves by at best 3.4 percentage points over the unpruned network. Measured as max over swept rounds of [mean test accuracy at early stop, round k] - [mean test accuracy at early stop, round 0]. The paper attaches this maximum to Pm=4.6% (round 14); the observed argmax round is reported alongside.",
+    "section": "Section 3, 'Finding winning tickets' paragraph (Figure 5, top-middle, solid lines, no dropout)",
+    "quote": "Test accuracy improves at best 3.4 percentage points for Conv-2 (P_m=4.6%), 3.5 for Conv-4 (P_m=11.1%), and 3.3 for Conv-6 (P_m=26.4%).",
+    "metric": "conv2_max_test_acc_delta_pp",
+    "claimed_value": 3.4,
+    "tolerance": 1.5,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "Budget: the paper's own internal spread on this quantity is up to 0.9pp (Section 3 reports 3.4pp test for Conv-2 while Appendix H.2 reports 3.3pp validation, and for Conv-6 the gap between the two is 3.3pp vs 2.4pp); binomial noise on a 10,000-example test set at ~70% accuracy contributes ~0.65pp to a difference of two measurements; the remainder covers 3 seeds against the paper's 5. 'At best' is a maximum over ~19 rungs and so is upward-biased on any single run, which the two-sided band also has to absorb. +/-1.5 accepts 1.9-4.9pp, so a null result (no accuracy gain from pruning) FAILS - the property that makes this claim worth registering. It will also fail if the paper's unstated input preprocessing differs enough from ours to change the size of the gain; that is a real, reportable outcome, not a mis-set tolerance."
+  },
+  {
+    "id": "C3",
+    "description": "Winning tickets learn faster on Conv-4: the best winning ticket reaches minimum validation loss 3.5x faster than the unpruned network. Same estimator as C1. The paper attaches this maximum to Pm=9.2% (round 12).",
+    "section": "Section 3, 'Finding winning tickets' paragraph (Figure 5, top, solid lines, no dropout)",
+    "quote": "Winning tickets reach minimum validation loss at best 3.5x faster for Conv-2 (P_m=8.8%), 3.5x for Conv-4 (P_m=9.2%), and 2.5x for Conv-6 (P_m=15.1%).",
+    "metric": "conv4_max_early_stop_speedup",
+    "claimed_value": 3.5,
+    "tolerance": 1.3,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "Same band and same reasoning as C1, applied to the same metric on a different architecture. Corroborated independently for Conv-4: Appendix H.2 reports 4.27x at Pm=11.1% under the selected lr 3e-4, a 0.77x disagreement with the main body's 3.5x. +/-1.3 accepts 2.2x-4.8x, which covers the paper's own 4.27x and fails a null result."
+  },
+  {
+    "id": "C4",
+    "description": "Winning tickets generalise better on Conv-4: test accuracy at the early-stopping iteration improves by at best 3.5 percentage points. Same estimator as C2. The paper attaches this maximum to Pm=11.1% (round 11).",
+    "section": "Section 3, 'Finding winning tickets' paragraph (Figure 5, top-middle, solid lines, no dropout)",
+    "quote": "Test accuracy improves at best 3.4 percentage points for Conv-2 (P_m=4.6%), 3.5 for Conv-4 (P_m=11.1%), and 3.3 for Conv-6 (P_m=26.4%).",
+    "metric": "conv4_max_test_acc_delta_pp",
+    "claimed_value": 3.5,
+    "tolerance": 1.5,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "Same band and same budget as C2. Corroborated for Conv-4 by Appendix H.2, which reports a 3.7pp validation improvement at Pm=5.4% under the selected lr, 0.2pp from the main body's 3.5pp. Accepts 2.0-5.0pp; a null result fails."
+  },
+  {
+    "id": "C5",
+    "description": "Winning tickets learn faster on Conv-6: the best winning ticket reaches minimum validation loss 2.5x faster than the unpruned network. Same estimator as C1. The paper attaches this maximum to Pm=15.1%, which is round 10 on the reconstructed ladder (see S7 - the rung is addressed by round index, not by the printed Pm).",
+    "section": "Section 3, 'Finding winning tickets' paragraph (Figure 5, top, solid lines, no dropout)",
+    "quote": "Winning tickets reach minimum validation loss at best 3.5x faster for Conv-2 (P_m=8.8%), 3.5x for Conv-4 (P_m=9.2%), and 2.5x for Conv-6 (P_m=15.1%).",
+    "metric": "conv6_max_early_stop_speedup",
+    "claimed_value": 2.5,
+    "tolerance": 0.9,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "The same 37% relative band used for C1 and C3 (1.3/3.5), rescaled to the smaller claimed value: 2.5 * 0.37 = 0.93, rounded to 0.9. This also matches the +/-0.9 band the already-published Lenet half of this reproduction used for the structurally identical 2.51x speedup claim, so the two halves are held to one standard. Corroborated by the paper's own Appendix H.2, which reports 2.61x for Conv-6 at Pm=11.9% - a 0.11x internal disagreement. Accepts 1.6x-3.4x; fails a null result."
+  },
+  {
+    "id": "C6",
+    "description": "Winning tickets generalise better on Conv-6: test accuracy at the early-stopping iteration improves by at best 3.3 percentage points. Same estimator as C2. The paper attaches this maximum to Pm=26.4%, which is round 7 on the reconstructed ladder (addressed by round index, see S7).",
+    "section": "Section 3, 'Finding winning tickets' paragraph (Figure 5, top-middle, solid lines, no dropout)",
+    "quote": "Test accuracy improves at best 3.4 percentage points for Conv-2 (P_m=4.6%), 3.5 for Conv-4 (P_m=11.1%), and 3.3 for Conv-6 (P_m=26.4%).",
+    "metric": "conv6_max_test_acc_delta_pp",
+    "claimed_value": 3.3,
+    "tolerance": 1.5,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "Same band and budget as C2 and C4. Conv-6 is where the paper disagrees with itself most on this metric: Section 3 reports 3.3pp (test, 5 trials) while Appendix H.2 reports 2.4pp (validation, 3 trials) - a 0.9pp internal spread, which is the empirical basis for the 1.5pp band across C2/C4/C6. Accepts 1.8-4.8pp; a null result fails."
+  },
+  {
+    "id": "C7",
+    "description": "The sparsity floor: all three convolutional networks stay above their unpruned average test accuracy for every rung with Pm>2%. Operationalised as the Pm of the FIRST rung at which seed-averaged test accuracy at early stop drops below the unpruned average (first-crossing semantics, so a noisy non-monotone curve cannot inflate the result), taken as the WORST (largest) such Pm across the three architectures - which is exactly what 'all three' asserts.",
+    "section": "Section 3, 'Finding winning tickets' paragraph",
+    "quote": "All three networks remain above their original average test accuracy when P_m>2%.",
+    "metric": "worst_arch_accuracy_crossover_pm_percent",
+    "claimed_value": 2,
+    "tolerance": 1.5,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "The crossover is quantised to the pruning ladder, which near 2% has ~0.4-0.5pp spacing (Conv-2: 2.965, 2.390, 1.928, 1.557), so +/-1.5 is about three rungs either side - the minimum that is not dominated by quantisation, given that accuracy curves are flat and noisy where they cross the baseline and the crossing rung is correspondingly unstable. Accepts a crossover anywhere in 0.5-3.5%, and fails if the networks degrade materially earlier (e.g. crossing at 8-10% remaining), which is the outcome that would actually contradict the paper. CENSORING RULE, fixed before the run: if no crossing occurs at any swept rung, the metric is right-censored - record the sparsest swept Pm and score the claim INCONCLUSIVE, never PASS. Sweep depth is set so this is unlikely: rounds 0-18 for Conv-2 (to Pm=1.93%), 0-22 for Conv-4 (to 1.72%) and Conv-6 (to 1.79%)."
+  },
+  {
+    "id": "C8",
+    "description": "The accuracy gain is generalisation, not optimisation: at the final training iteration (20,000 / 25,000 / 30,000 for Conv-2/4/6) training accuracy reaches ~100% for every rung with Pm>=2%, so winning tickets' higher test accuracy cannot be explained by better fitting of the training set. Operationalised as the minimum, over all three architectures and all rungs with Pm>=2%, of seed-averaged final-iteration training accuracy.",
+    "section": "Section 3; backing graphs in Appendix D, Figure 13; restated in the Figure 5 caption",
+    "quote": "at iteration 20,000 for Conv-2, 25,000 for Conv-4, and 30,000 for Conv-6 (the iterations corresponding to the final training iteration for the original network), training accuracy reaches 100% for all networks when P_m>=2% (Appendix D, Figure 13) and winning tickets still maintain higher test accuracy",
+    "metric": "min_final_train_acc_pct_above_2pct",
+    "claimed_value": 100,
+    "tolerance": 2,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "The paper itself hedges the figure: the Figure 5 caption writes 'training accuracy ~100% for P_m>=2%' and Appendix D says '100% in all cases for all but the most heavily pruned networks'. A tolerance tighter than the paper's own '~' would be scoring a precision the paper does not assert. The statistic is a minimum over ~60 architecture-rung combinations and is therefore worst-case and downward-biased, which the band must also absorb. +/-2.0 accepts >=98% and still fails clearly if heavily-pruned networks cannot fit the training set - the outcome that would break the generalisation argument. Note the non-strict >=2% threshold here versus the strict >2% in C7; both are transcribed as written."
+  },
+  {
+    "id": "C9",
+    "description": "The initialisation matters, not just the structure: at the sparsest swept rung, winning tickets retain higher test accuracy at early stop than the same masks with randomly resampled initialisations. Registered as a SIGN TEST - the paper makes no numeric reinitialisation claim for Conv-2/4/6, so no magnitude is asserted. Metric is the count of architectures (0-3) whose seed-averaged winning-ticket test accuracy exceeds the seed-averaged random-reinitialisation test accuracy at that rung.",
+    "section": "Section 3, 'Random reinitialization' paragraph (Figure 5, dashed lines)",
+    "quote": "These networks again take increasingly longer to learn upon continued pruning. Just as with Lenet on MNIST (Section 2), test accuracy drops off more quickly for the random reinitialization experiments.",
+    "metric": "num_archs_ticket_beats_reinit_at_sparsest_rung",
+    "claimed_value": 3,
+    "tolerance": 0.5,
+    "tolerance_kind": "abs",
+    "tolerance_rationale": "Section 3 states this direction for the convolutional networks but never quantifies it (unlike Section 2, which gives 2.51x and 'half a percentage point' for Lenet), so registering any magnitude would be inventing a number the paper does not contain. A sign test is the faithful encoding: claimed_value 3.0 with +/-0.5 passes only if all three architectures show the asserted direction, which is the paper's own scope ('all three'). The sparsest swept rung is chosen because that is where the paper says the gap is largest and least ambiguous. This reproduction uses 1 reinitialisation draw per seed (3 draws per point) against the paper's 3 per trial (15 per point) - a declared deviation. The paper's separate observation that reinitialised Conv-2/Conv-4 accuracy 'initially remains steady and even improves' at moderate pruning is reported descriptively and not scored, for the same no-number reason."
+  }
+]
