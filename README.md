@@ -49,6 +49,16 @@ the eventual result informative rather than post-hoc.
 They are one paper. Splitting a replication across repositories by experiment
 makes the claim ledger harder to read than the paper it is checking.
 
+## Beyond the paper's own question
+
+[`USE_CASES.md`](USE_CASES.md) lists five things this work is useful for that the
+original paper was not written to serve — a measured compression schedule with a
+located accuracy cliff, a CI canary for silent training-pipeline regressions, a
+way to size the seed count a convergence-speed claim needs, a transferable
+template for auditing anyone's numeric claims, and a pre-submission
+parameter-count check that catches a class of error peer review reliably misses.
+Each points at evidence in this repo, and the caveats are stated with them.
+
 ## Known defects in this replication
 
 Errata are published, not patched away. See
