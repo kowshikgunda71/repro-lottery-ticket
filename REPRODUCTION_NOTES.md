@@ -146,3 +146,23 @@ MNIST was acquired from the CVDF mirror
 (`storage.googleapis.com/cvdf-datasets/mnist/`) with SHA-256 verification; the
 checksums are in `experiment.json`. Each run took ~3.7 h on 4 CPU cores of an
 NVIDIA GB10 (aarch64), CPU-only, no network inside the container.
+
+## Pre-declared extension to 5 seeds
+
+*Recorded 2026-07-25, before the additional runs were started, and published in
+this state.*
+
+The 3-seed result above is final and stands as published. Because the paper
+averages **five** trials and C1's failure is plausibly a sample-size artifact,
+seeds 3 and 4 are being run under the identical harness, identical command, and
+the identical `claims.json` registered before any run.
+
+To be explicit about what this is and is not: extending the sample after seeing
+a claim fail can amount to running seeds until a result flips. It is declared
+here in advance to make that unfalsifiable:
+
+- The claims and tolerances are unchanged and were fixed before seed 0 ran.
+- The n=3 numbers above will **not** be edited or withdrawn, whatever n=5 shows.
+- Both the n=3 and n=5 results will be reported side by side.
+- The extension stops at 5 seeds — the paper's own trial count — and not at
+  whatever n first makes C1 pass.
