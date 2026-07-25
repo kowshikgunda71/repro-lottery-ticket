@@ -1,0 +1,99 @@
+{
+  "paper_id": "arXiv:1803.03635",
+  "overall_verdict": "REPRODUCED",
+  "evaluated_at": "2026-07-25T18:54:02.014506+00:00",
+  "note": "Verdicts use tolerances registered before the run. REPRODUCED = the authors' own artifacts reproduced the reported result within tolerance (ACM 'Results Reproduced'); it is NOT replication.",
+  "claims": [
+    {
+      "claim_id": "C1",
+      "description": "Winning tickets learn faster: at Pm=21.1% the early-stopping iteration (minimum validation loss) occurs 38% earlier than for the unpruned network.",
+      "section": "Section 2, 'Iterative pruning' (Figure 4a, left)",
+      "metric": "early_stop_reduction_pct_pm21_1",
+      "claimed_value": 38.0,
+      "observed_value": 44.68,
+      "tolerance": 15.0,
+      "tolerance_kind": "abs",
+      "delta": 6.68,
+      "allowed": 15.0,
+      "verdict": "REPRODUCED"
+    },
+    {
+      "claim_id": "C2",
+      "description": "Test accuracy at early stop improves by more than 0.3 percentage points at Pm=13.5% relative to the unpruned network.",
+      "section": "Section 2, 'Iterative pruning' (Figure 4a, middle)",
+      "metric": "test_acc_delta_pp_pm13_5",
+      "claimed_value": 0.3,
+      "observed_value": 0.27,
+      "tolerance": 0.3,
+      "tolerance_kind": "abs",
+      "delta": 0.03,
+      "allowed": 0.3,
+      "verdict": "REPRODUCED"
+    },
+    {
+      "claim_id": "C3",
+      "description": "By Pm=3.6% the accuracy gain is gone: test accuracy returns to the level of the original unpruned network.",
+      "section": "Section 2, 'Iterative pruning' (Figure 4a, middle)",
+      "metric": "test_acc_delta_pp_pm3_6",
+      "claimed_value": 0.0,
+      "observed_value": 0.21,
+      "tolerance": 0.3,
+      "tolerance_kind": "abs",
+      "delta": 0.21,
+      "allowed": 0.3,
+      "verdict": "REPRODUCED"
+    },
+    {
+      "claim_id": "C4",
+      "description": "The original initialisation matters: at Pm=21% the winning ticket reaches minimum validation loss 2.51x faster than the same mask with a resampled initialisation.",
+      "section": "Section 2, 'Random reinitialization' (Figure 4a, orange)",
+      "metric": "speedup_ticket_vs_random_pm21_1",
+      "claimed_value": 2.51,
+      "observed_value": 3.192,
+      "tolerance": 0.9,
+      "tolerance_kind": "abs",
+      "delta": 0.682,
+      "allowed": 0.9,
+      "verdict": "REPRODUCED"
+    },
+    {
+      "claim_id": "C5",
+      "description": "At Pm=21% the winning ticket is about half a percentage point more accurate than the same mask randomly reinitialised.",
+      "section": "Section 2, 'Random reinitialization' (Figure 4a, middle)",
+      "metric": "acc_gap_ticket_minus_random_pp_pm21_1",
+      "claimed_value": 0.5,
+      "observed_value": 0.31,
+      "tolerance": 0.4,
+      "tolerance_kind": "abs",
+      "delta": 0.19,
+      "allowed": 0.4,
+      "verdict": "REPRODUCED"
+    },
+    {
+      "claim_id": "C6",
+      "description": "Winning tickets generalise better, not just optimise faster: at iteration 50,000 they still improve test accuracy by up to 0.35 percentage points over the unpruned network.",
+      "section": "Section 2, 'Iterative pruning' (Figure 4b)",
+      "metric": "max_test_acc_delta_pp_final_iter",
+      "claimed_value": 0.35,
+      "observed_value": 0.39,
+      "tolerance": 0.3,
+      "tolerance_kind": "abs",
+      "delta": 0.04,
+      "allowed": 0.3,
+      "verdict": "REPRODUCED"
+    },
+    {
+      "claim_id": "C7",
+      "description": "Structural check of the pruning schedule: pruning 20% of surviving weights per round in each fully-connected layer and 10% in the output layer, layer-wise, leaves Pm=21.1% of the 266,200 weights after 7 rounds.",
+      "section": "Section 2 (Pm labels) + Appendix G.1 / Figure 2 ('All Weights 266K')",
+      "metric": "pm_percent_pm21_1",
+      "claimed_value": 21.1,
+      "observed_value": 21.072,
+      "tolerance": 0.05,
+      "tolerance_kind": "abs",
+      "delta": 0.028,
+      "allowed": 0.05,
+      "verdict": "REPRODUCED"
+    }
+  ]
+}
