@@ -49,6 +49,17 @@ the eventual result informative rather than post-hoc.
 They are one paper. Splitting a replication across repositories by experiment
 makes the claim ledger harder to read than the paper it is checking.
 
+## Known defects in this replication
+
+Errata are published, not patched away. See
+[`lenet/ERRATUM.md`](lenet/ERRATUM.md): two of the seven LeNet claims are
+one-sided in the paper's wording ("more than 0.3", "up to 0.35") and were
+registered two-sided. Rescored correctly the verdicts are unchanged and the 6/7
+headline stands — but the registration was right by luck, not construction, and
+under a different draw it would have produced a false failure. The scorer now
+supports one-sided and interval claims; the original registration is left
+unedited, because a pre-registration rewritten after results exist is worthless.
+
 ## Honest results
 
 Every registered claim is published with its verdict — replicated, **not
