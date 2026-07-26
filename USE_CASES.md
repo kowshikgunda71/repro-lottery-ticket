@@ -1,123 +1,125 @@
-# Five uses for this work that the original paper wasn't written for
+# Where this work is useful — and where the evidence runs out
 
-> ### ⚠️ These are SUGGESTIONS, not findings. None of them has been validated.
->
-> This replication tested the paper's claims. It did **not** test any of the use
-> cases below. They are unvalidated proposals, extrapolated from artifacts this
-> work happened to produce — plausible directions, not results, and no part of
-> the evidence here establishes that any of them works in practice.
->
-> Treat each one as a hypothesis to test yourself. Two of the five (items 2 and
-> 5) are *procedures* and are the most likely to transfer; the rest rest on
-> *measurements* taken on one architecture, one dataset and one set of
-> hyperparameters, and should be assumed not to transfer until re-measured.
->
-> The original authors neither proposed nor endorsed any of this.
+This file has two halves and they are not equally reliable.
 
+**Part A — Evidenced.** Where pruning and the Lottery Ticket line of work
+actually stand in 2026, each claim with a source that was opened and checked.
+Some of it argues *against* using this technique.
 
-Frankle & Carbin wrote *The Lottery Ticket Hypothesis* to argue a scientific
-point: that a randomly-initialised dense network contains a sparse subnetwork
-which, trained from **its original initialisation**, matches the full network.
-That is a claim about *why* neural networks are trainable.
-
-This repository is a replication of that claim — but the artifacts it produced
-(a from-scratch IMP harness, a 21-rung sparsity ladder measured across 5 seeds,
-a random-reinitialisation control, and the pre-registration machinery around
-them) are useful for several things the paper was not aimed at. Each item below
-points at evidence actually in this repo.
+**Part B — Unvalidated suggestions.** Extrapolations from this replication's own
+artifacts. This replication tested the paper's claims; it did **not** test any of
+these. They are hypotheses, not results, and the original authors neither
+proposed nor endorsed them.
 
 ---
 
-### 1. A measured compression schedule with a known accuracy cliff
+# Part A — What is actually true about pruning in 2026 (evidenced)
 
-The paper argues tickets *exist*. What a practitioner shipping to a phone or a
-microcontroller needs is *where the cliff is*, in numbers, on their own hardware.
+## A1. The flagship commercial sparsity stack is dead
 
-[`lenet/CROSS_SEED_REPORT_N5.md`](lenet/CROSS_SEED_REPORT_N5.md) is exactly that
-table: accuracy at every rung from 100% down to 1.19% density, averaged over 5
-seeds. It shows accuracy **above** baseline from ~80% down to ~3.6% density
-(peaking around +0.29pp at 21%), then falling off — −0.45pp at 1.85%, −1.06pp at
-1.19%. So on LeNet-300-100/MNIST you can delete ~79% of the weights and do
-slightly *better*, and the honest budget before real degradation is roughly 3%.
+Neural Magic — the company built on running pruned/sparse models fast on
+commodity CPUs — was acquired by Red Hat, and its entire sparsity product line
+(DeepSparse, SparseML, SparseZoo, Sparsify) was **end-of-lifed on 2025-06-02**,
+with the repository archived the following day.
+Source: <https://github.com/neuralmagic/deepsparse>
 
-Useful because it is a measured curve with seed-level variance, not a rule of
-thumb. `code/imp.py` re-runs it on a different architecture.
+The successor library from the same team (Red Hat AI + the vLLM Project),
+[`llm-compressor`](https://github.com/vllm-project/llm-compressor), is
+**quantization-first**: it ships no general pruning method in its headline
+algorithms.
 
-### 2. A sensitive canary for silent training-pipeline regressions
+**What this means for you:** if you came here looking for a production path to
+sparse inference, the commercial vehicle for it has shut down. Quantization is
+where that engineering effort went.
 
-The paper's central control — train the same mask from the original init vs. from
-a fresh random init — turns out to be a very sensitive integrity check, and
-nobody needs to care about the hypothesis to use it.
+## A2. The scale limitation is real, but it was fixed — do not repeat the popular overstatement
 
-Across every seed and both sparsity levels tested, the ticket beat its
-randomly-reinitialised twin **10 times out of 10**: +0.31 to +1.28pp accuracy and
-1.54× to 3.90× faster to early stop. That gap is large, consistent, and it
-depends on the initialisation being preserved end-to-end.
+The widely-repeated claim is "LTH doesn't scale." The accurate version:
 
-Which makes it a CI assertion. If someone changes your seeding, your init scheme,
-your checkpoint restore, or your data order in a way that silently decouples
-weights from their initialisation, this gap collapses toward zero long before
-your top-line accuracy moves enough to notice.
+- Gale, Elsen & Hooker, *The State of Sparsity in Deep Neural Networks*
+  ([arXiv:1902.09574](https://arxiv.org/abs/1902.09574), Feb 2019) could not
+  reproduce the winning-ticket phenomenon on ResNet-50/ImageNet or
+  Transformer/WMT14. That is a **null result against rewinding to
+  initialization**, not a refutation of the hypothesis.
+- One month later, Frankle et al. showed that rewinding to an *early training
+  iteration* rather than to initialization **does** find winning tickets at
+  ResNet-50/ImageNet scale
+  ([arXiv:1912.05671](https://arxiv.org/abs/1912.05671)).
 
-### 3. Sizing how many seeds your own benchmark actually needs
+So the hypothesis survives with a procedural amendment. Anyone telling you it
+was debunked is quoting the 2019 null result and skipping the 2019 fix.
 
-The most useful number here is one that *failed*.
+## A3. What actually ships for compressing large models
 
-Claim C1 — "38% earlier early stopping" — did not replicate at n=3 or n=5, and
-[`lenet/REPRODUCTION_NOTES.md`](lenet/REPRODUCTION_NOTES.md) shows why: the
-unpruned network's early-stopping iteration came out 7500/4100/3900/4700/4400
-across seeds — a **30% coefficient of variation** on the denominator alone.
+Not iterative magnitude pruning from initialization. The methods in production
+use are **one-shot post-training** pruning (SparseGPT
+[arXiv:2301.00774](https://arxiv.org/abs/2301.00774), Wanda) and **structured
+pruning plus knowledge distillation** — see NVIDIA's Llama-3.1-Minitron work.
+None of them rewind to an initialization.
+
+**Honest consequence for this repository:** the LTH replication has no
+downstream production consumer. Its value here is pedagogical and as a test
+fixture for the pre-registration tooling. That is stated plainly rather than
+dressed up.
+
+---
+
+# Part B — Unvalidated suggestions
+
+> ### ⚠️ None of the following has been tested.
+> These are extrapolations from artifacts this replication happened to produce.
+> Treat each as a hypothesis. Items marked **procedure** are more likely to
+> transfer than items marked **measurement**, because a measurement is a number
+> from one architecture, one dataset and one set of hyperparameters.
+
+### B1. A CI canary for silent training-pipeline regressions — *procedure*
+
+The paper's central control (same mask, original init vs. a fresh one) is a
+sensitive integrity check, and you do not have to care about the hypothesis to
+use it. Across every seed and both sparsity levels tested, the ticket beat its
+randomly-reinitialised twin **10 times out of 10**: +0.31 to +1.28pp accuracy,
+1.54×–3.90× faster to early stop.
+
+That gap depends on the initialisation surviving end-to-end. If a change to
+seeding, init, checkpoint restore, or data order silently decouples weights from
+their initialisation, this collapses toward zero long before top-line accuracy
+moves enough to notice.
+
+### B2. Sizing the seed count your own benchmark needs — *measurement*
+
+The most useful number here is one that failed. The unpruned network's
+early-stopping iteration came out **7500 / 4100 / 3900 / 4700 / 4400** across
+seeds — a ~30% coefficient of variation on the denominator alone.
 
 If you are about to report "our method converges X% faster" from a single run,
-that is the number to look at first. Iteration-of-minimum-validation-loss is a
-noisy argmin, and a ratio of two of them is noisier still. The measured
-dispersion here lets you compute the sample size a convergence-speed claim needs
-*before* you run the experiment.
+look at that first. Iteration-of-minimum-validation-loss is a noisy argmin, and
+a ratio of two of them is noisier still. See
+[`lenet/REPRODUCTION_NOTES.md`](lenet/REPRODUCTION_NOTES.md).
 
-### 4. A worked template for evaluating someone else's numeric claims
+### B3. A pre-submission parameter-count check — *procedure, and the strongest item here*
 
-Strip out the lottery tickets and what remains is a procedure for holding a
-claimed number to account:
+Needed no GPU. This paper's printed Conv-6 parameter count (1.7M) contradicts the
+architecture its own appendix describes (2,261,184) — established three
+independent ways. `code/imp_conv.py --selfcheck` shows the pattern: compute the
+count from the architecture you describe and assert it against the one you print.
 
-1. quote the claim verbatim, with its source
-2. fix the tolerance and its justification **before** you measure
-3. publish the registration with a timestamp
-4. score mechanically and publish the result whichever way it goes
+Peer review reliably misses this class of error because reviewers rarely multiply
+layer shapes. The generalized version is `gym audit` in
+[paper-repro-gym](https://github.com/kowshikgunda71/paper-repro-gym).
 
-That transfers directly to evaluating a vendor's accuracy/latency claims before a
-pilot, validating a model card, or checking an internal team's benchmark. The
-tolerances are the hard part, and
-[`paper-repro-gym`](https://github.com/kowshikgunda71/paper-repro-gym) now derives
-them by rule from the claim's own reported precision rather than by judgement —
-which is what stops "we set the bar where we knew we'd clear it".
+### B4. A compression schedule with a located cliff — *measurement, and see A1*
 
-### 5. A pre-submission consistency check for your own papers
+[`lenet/CROSS_SEED_REPORT_N5.md`](lenet/CROSS_SEED_REPORT_N5.md) gives accuracy
+at every rung from 100% down to 1.19% density across 5 seeds: above baseline from
+~80% down to ~3.6% density, then −0.45pp at 1.85% and −1.06pp at 1.19%.
 
-The most transferable finding here needed no GPU at all.
+Read this alongside **A1** and **A3**: it is a measured curve on
+LeNet-300-100/MNIST, and the production tooling for exploiting sparsity has moved
+elsewhere. Useful as a teaching curve; not a deployment recipe.
 
-[`cifar/PREREGISTRATION.md`](cifar/PREREGISTRATION.md) documents that the paper's
-stated Conv-6 parameter count (1.7M) contradicts the architecture its own
-appendix describes (2,261,184) — established three independent ways, including
-against the paper's own printed sparsity labels. It was found by arithmetic,
-before any run.
+### B5. A template for auditing anyone's numeric claim — *procedure*
 
-Any paper stating an architecture *and* a parameter count is checkable this way
-in seconds, and the check catches a class of error that peer review reliably
-misses because reviewers rarely multiply the layer shapes. Run it on your own
-draft before submitting. `code/imp_conv.py --selfcheck` shows the pattern:
-compute the count from the described architecture and assert it against the one
-you plan to print.
-
----
-
-### A caveat that applies to all five
-
-These are uses of *this replication's* artifacts and measurements, on
-LeNet-300-100/MNIST and (in progress) CIFAR-10 Conv-2/4/6, at the specific
-hyperparameters the paper describes. Nothing here establishes that the numbers
-transfer to your architecture, your data, or your optimiser — items 1 and 3 in
-particular are measurements, not laws. Re-run `code/imp.py` on your own setup
-rather than importing the constants.
-
-Item 2 and item 5 are the two that generalise cleanly, because they are
-*procedures*, not values.
+Strip out the lottery tickets and a general procedure remains: quote the claim
+verbatim, fix the tolerance *and its justification* before measuring, publish the
+registration with a timestamp, score mechanically, publish either way. That
+transfers to vendor accuracy claims, model cards, and internal benchmarks.
