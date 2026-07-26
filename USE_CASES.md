@@ -1,5 +1,20 @@
 # Five uses for this work that the original paper wasn't written for
 
+> ### ⚠️ These are SUGGESTIONS, not findings. None of them has been validated.
+>
+> This replication tested the paper's claims. It did **not** test any of the use
+> cases below. They are unvalidated proposals, extrapolated from artifacts this
+> work happened to produce — plausible directions, not results, and no part of
+> the evidence here establishes that any of them works in practice.
+>
+> Treat each one as a hypothesis to test yourself. Two of the five (items 2 and
+> 5) are *procedures* and are the most likely to transfer; the rest rest on
+> *measurements* taken on one architecture, one dataset and one set of
+> hyperparameters, and should be assumed not to transfer until re-measured.
+>
+> The original authors neither proposed nor endorsed any of this.
+
+
 Frankle & Carbin wrote *The Lottery Ticket Hypothesis* to argue a scientific
 point: that a randomly-initialised dense network contains a sparse subnetwork
 which, trained from **its original initialisation**, matches the full network.
